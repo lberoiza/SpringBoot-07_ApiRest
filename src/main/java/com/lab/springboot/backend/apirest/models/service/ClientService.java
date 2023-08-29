@@ -7,4 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ClientService extends BaseCRUDService<Client, ClientRepository>{
 
+  public boolean existsEmail(String email){
+    return this.repository.existsByEmail(email);
+  }
 }
