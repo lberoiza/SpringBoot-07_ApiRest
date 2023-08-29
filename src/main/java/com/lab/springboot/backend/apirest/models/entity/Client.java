@@ -23,7 +23,8 @@ public class Client implements EntityTable {
   private static final long serialVersionUID = -7205843364359501687L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_client_id")
+  @SequenceGenerator(name = "seq_client_id", initialValue = 50, allocationSize = 1)
   private Long id;
 
   @NotBlank
@@ -64,6 +65,7 @@ public class Client implements EntityTable {
 
   @PrePersist
   public void prePersist() {
+    createdAt = LocalDateTime.now();
     updatedAt = LocalDateTime.now();
   }
 
