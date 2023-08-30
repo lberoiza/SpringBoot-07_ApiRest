@@ -26,6 +26,18 @@ INSERT INTO clients (id, name, surname, email, created_at, updated_at, image) VA
 INSERT INTO clients (id, name, surname, email, created_at, updated_at, image) VALUES (10, 'Jackie', 'Chan', 'jack-chan@email.com', '2023-05-26', '2023-05-26', '');
 INSERT INTO clients (id, name, surname, email, created_at, updated_at, image) VALUES (11, 'David', 'Copperfield', 'magician@email.com', '2023-05-26', '2023-05-26', '');
 INSERT INTO clients (id, name, surname, email, created_at, updated_at, image) VALUES (12, 'Samantha', 'Johansson', 'sam-jo@email.com', '2023-05-26', '2023-05-26', '');
+INSERT INTO clients (id, name, surname, email, created_at, updated_at, image) VALUES (13, 'test', 'test','test@test.com', '2023-08-29 21:23:06', '2023-08-29 21:23:06', '');
+INSERT INTO clients (id, name, surname, email, created_at, updated_at, image) VALUES (14, 'Luis', 'Osses', 'luis.beroiza@gmail.com', '2023-08-30 11:20:38', '2023-08-30 11:20:38', '');
+INSERT INTO clients (id, name, surname, email, created_at, updated_at, image) VALUES (15, 'Bilbo', 'Baggins', 'bilbo@email.com', '2023-08-30 11:21:42', '2023-08-30 11:21:42', '');
+INSERT INTO clients (id, name, surname, email, created_at, updated_at, image) VALUES (16, 'Frodo', 'Baggins', 'frodo@baggins', '2023-08-30 11:22:48', '2023-08-30 11:22:48', '');
+INSERT INTO clients (id, name, surname, email, created_at, updated_at, image) VALUES (17, 'Legolas', 'Hoja', 'legolas@hoja.com', '2023-08-30 11:24:03', '2023-08-30 11:24:03', '');
+INSERT INTO clients (id, name, surname, email, created_at, updated_at, image) VALUES (18, 'Agente', 'Smith', 'smith@matrix.com', '2023-08-30 11:36:32', '2023-08-30 11:36:32', '');
+INSERT INTO clients (id, name, surname, email, created_at, updated_at, image) VALUES (19, 'Clark', 'Kent', 'superman@planet.com', '2023-08-30 11:37:05', '2023-08-30 11:37:05', '');
+INSERT INTO clients (id, name, surname, email, created_at, updated_at, image) VALUES (20, 'Peter', 'Parker', 'spiderman@avengers.com', '2023-08-30 11:38:05', '2023-08-30 11:38:05', '');
+INSERT INTO clients (id, name, surname, email, created_at, updated_at, image) VALUES (21, 'Jack', 'Bauer', 'jbauer@ctu.com', '2023-08-30 11:39:05', '2023-08-30 11:39:05', '');
+INSERT INTO clients (id, name, surname, email, created_at, updated_at, image) VALUES (22, 't1000', 'skynet', 't1000@skynet.com', '2023-08-30 11:40:42', '2023-08-30 11:40:42', '');
+INSERT INTO clients (id, name, surname, email, created_at, updated_at, image) VALUES (23, 't100', 'skynet', 't100@skynet.com', '2023-08-30 11:40:05', '2023-08-30 11:41:45', '');
+INSERT INTO clients (id, name, surname, email, created_at, updated_at, image) VALUES (24, 'Luis', 'Osses', 'test2@test.com', '2023-08-30 11:40:05', '2023-08-30 11:57:17', '');
 
 -- Genera el ID autoincremental a partir del id maximo de la tabla
 -- ALTER TABLE clients ALTER COLUMN id RESTART WITH (SELECT MAX(id) + 1 FROM clients);
