@@ -1,5 +1,8 @@
 package com.lab.springboot.backend.apirest.utils;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
@@ -13,12 +16,21 @@ public class ApiResponse<T> {
   private static String MESSAGE_WARNING = "warning";
   private static String MESSAGE_ERROR = "error";
 
+  @Getter
   private Map<String, List<String>> messages;
+
+  @Getter
+  @JsonProperty("response")
   private T responseData;
+
+  @Getter
   private HttpStatus httpStatus;
 
+  @Getter
+  private int httpCode;
+
   public ApiResponse() {
-    this.httpStatus = HttpStatus.OK;
+    this.setHttpStatus(HttpStatus.OK);
     this.initializeMessages();
   }
 
@@ -49,12 +61,13 @@ public class ApiResponse<T> {
     this.responseData = responseData;
   }
 
-  public boolean isSuccessfull() {
+  @JsonProperty("isSuccessfully")
+  public boolean isSuccessfully() {
     return this.messages.get(MESSAGE_ERROR).isEmpty();
   }
 
   public void setHttpStatus(HttpStatus httpStatus) {
     this.httpStatus = httpStatus;
+    this.httpCode = httpStatus.value();
   }
-
 }

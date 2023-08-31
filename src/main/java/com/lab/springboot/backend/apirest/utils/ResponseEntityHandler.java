@@ -3,19 +3,20 @@ package com.lab.springboot.backend.apirest.utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @Slf4j
-public class ApiResponseHandler {
+public class ResponseEntityHandler {
 
   @FunctionalInterface
-  private interface ApiResponseHandlerInterface<T> {
-    ApiResponse<T> excecuteLogic();
+  public interface ApiResponseHandlerInterface<T> {
+    ApiResponse<T> executeLogic();
   }
 
-  public static <T> ApiResponse<T> handleResponse(ApiResponseHandlerInterface<T> handler) {
+  public static <T> ResponseEntity<ApiResponse<T>> handleApiResponse(ApiResponseHandlerInterface<T> handler) {
     ApiResponse<T> apiResponse = new ApiResponse<>();
     try {
-      ApiResponse<T> tempResponse = handler.excecuteLogic();
+      ApiResponse<T> tempResponse = handler.executeLogic();
       if (tempResponse != null) {
         apiResponse = tempResponse;
       }
@@ -31,7 +32,7 @@ public class ApiResponseHandler {
       log.error("{}: {}", error, ex.toString());
     }
 
-    return apiResponse;
+    return new ResponseEntity<>(apiResponse, apiResponse.getHttpStatus());
   }
 
 }
