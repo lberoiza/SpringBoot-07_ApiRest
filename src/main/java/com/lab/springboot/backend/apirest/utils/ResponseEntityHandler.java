@@ -21,18 +21,28 @@ public class ResponseEntityHandler {
         apiResponse = tempResponse;
       }
     } catch (DataAccessException daEx) {
-      String error = "Error to access the data";
-      apiResponse.addError(error);
-      apiResponse.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-      log.error("{}: {}", error, daEx.toString());
+      handleDataAccessException(apiResponse, daEx);
     } catch (Exception ex) {
-      String error = "System Internal Error";
-      apiResponse.addError(error);
-      apiResponse.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-      log.error("{}: {}", error, ex.toString());
+      handleGeneralException(apiResponse, ex);
     }
 
     return new ResponseEntity<>(apiResponse, apiResponse.getHttpStatus());
   }
+
+
+  private static <T> void handleDataAccessException(ApiResponse<T> apiResponse, DataAccessException daEx) {
+    String error = "Error accessing data";
+    apiResponse.addError(error);
+    apiResponse.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+    log.error("{}: {}", error, daEx.toString());
+  }
+
+  private static <T> void handleGeneralException(ApiResponse<T> apiResponse, Exception ex) {
+    String error = "Internal server error";
+    apiResponse.addError(error);
+    apiResponse.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+    log.error("{}: {}", error, ex.toString());
+  }
+
 
 }
