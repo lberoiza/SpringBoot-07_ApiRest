@@ -20,19 +20,26 @@ public class ResponseEntityHandler {
       if (tempResponse != null) {
         apiResponse = tempResponse;
       }
+    } catch (ApiServiceException apiEx) {
+      handleApiServiceException(apiResponse, apiEx);
     } catch (DataAccessException daEx) {
       handleDataAccessException(apiResponse, daEx);
     } catch (Exception ex) {
       handleGeneralException(apiResponse, ex);
     }
-
     return new ResponseEntity<>(apiResponse, apiResponse.getHttpStatus());
   }
 
 
+  private static <T> void handleApiServiceException(ApiResponse<T> apiResponse, ApiServiceException apiEx) {
+    apiResponse.addError(apiEx.getMessage());
+    apiResponse.setHttpStatus(apiEx.getHttpStatus());
+    log.info("{}: {}", apiEx.getMessage(), apiEx.toString());
+  }
+
   private static <T> void handleDataAccessException(ApiResponse<T> apiResponse, DataAccessException daEx) {
     String error = "Error accessing data";
-    apiResponse.addError(error);
+    apiResponse.addError(String.format("%s: %s", error, daEx.getMostSpecificCause()));
     apiResponse.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
     log.error("{}: {}", error, daEx.toString());
   }
