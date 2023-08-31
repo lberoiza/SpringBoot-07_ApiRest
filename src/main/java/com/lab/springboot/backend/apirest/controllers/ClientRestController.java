@@ -3,6 +3,7 @@ package com.lab.springboot.backend.apirest.controllers;
 import com.lab.springboot.backend.apirest.models.entity.Client;
 import com.lab.springboot.backend.apirest.models.service.ClientService;
 import com.lab.springboot.backend.apirest.utils.ApiResponse;
+import com.lab.springboot.backend.apirest.utils.ApiServiceException;
 import com.lab.springboot.backend.apirest.utils.ResponseEntityHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class ClientRestController {
       ApiResponse<List<Client>> response = new ApiResponse<>();
       List<Client> clients = this.clientService.findAll();
       response.addResponseData(clients);
-      if(clients.isEmpty()){
+      if (clients.isEmpty()) {
         response.addWarning("There are no clients");
       }
       return response;
@@ -41,13 +42,7 @@ public class ClientRestController {
   public ResponseEntity<ApiResponse<Client>> getClientDetails(@PathVariable Long id) {
     return ResponseEntityHandler.handleApiResponse(() -> {
       ApiResponse<Client> response = new ApiResponse<>();
-      Optional<Client> clientOptional = this.clientService.findById(id);
-      if(clientOptional.isEmpty()) {
-        response.addError(String.format("Client with id (%d) not found", id));
-        response.setHttpStatus(HttpStatus.NOT_FOUND);
-      } else {
-        response.addResponseData(clientOptional.get());
-      }
+      response.addResponseData(this.clientService.findByIdOrThrowsException(id));
       return response;
     });
   }
@@ -62,19 +57,17 @@ public class ClientRestController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ApiResponse<Client>>  update(@RequestBody Client client, @PathVariable Long id) {
+  public ResponseEntity<ApiResponse<Client>> update(@RequestBody Client client, @PathVariable Long id) {
 
     return ResponseEntityHandler.handleApiResponse(() -> {
       ApiResponse<Client> response = new ApiResponse<>();
 
-      Optional<Client> optionalClient = this.clientService.findById(id);
-      if (optionalClient.isEmpty()) {
-        response.addError(String.format("Client with id (%d) not found", id));
-        response.setHttpStatus(HttpStatus.NOT_FOUND);
-        return response;
-      }
+      Client currentClient = this.clientService.findByIdOrThrowsException(id);
 
-      Client currentClient = optionalClient.get();
+      if(this.clientService.checkIfEmailExistByAnotherUser(currentClient, client.getEmail())) {
+        String error = String.format("The Email '%s' already exists by another user", client.getEmail());
+        throw new ApiServiceException(error, HttpStatus.ALREADY_REPORTED);
+      }
       currentClient.setName(client.getName());
       currentClient.setSurname(client.getSurname());
       currentClient.setImage(client.getImage());
@@ -92,8 +85,6 @@ public class ClientRestController {
       this.clientService.deleteById(id);
       return null;
     });
-
   }
-
 
 }
