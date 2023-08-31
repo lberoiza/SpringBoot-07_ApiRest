@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -33,6 +32,7 @@ public class ClientRestController {
       response.addResponseData(clients);
       if (clients.isEmpty()) {
         response.addWarning("There are no clients");
+        response.setHttpStatus(HttpStatus.NOT_FOUND);
       }
       return response;
     });
@@ -52,6 +52,7 @@ public class ClientRestController {
     return ResponseEntityHandler.handleApiResponse(() -> {
       ApiResponse<Client> response = new ApiResponse<>();
       response.addResponseData(this.clientService.saveOrUpdate(client));
+      response.setHttpStatus(HttpStatus.CREATED);
       return response;
     });
   }
@@ -74,16 +75,18 @@ public class ClientRestController {
       currentClient.setEmail(client.getEmail());
 
       response.addResponseData(this.clientService.saveOrUpdate(currentClient));
+      response.setHttpStatus(HttpStatus.CREATED);
       return response;
     });
   }
 
   @DeleteMapping("/{id}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
   public ResponseEntity<ApiResponse<Client>> deleteClient(@PathVariable Long id) {
     return ResponseEntityHandler.handleApiResponse(() -> {
+      ApiResponse<Client> response = new ApiResponse<>();
       this.clientService.deleteById(id);
-      return null;
+      response.setHttpStatus(HttpStatus.NO_CONTENT);
+      return response;
     });
   }
 
