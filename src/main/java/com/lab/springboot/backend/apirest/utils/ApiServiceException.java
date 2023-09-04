@@ -15,4 +15,8 @@ public class ApiServiceException extends RuntimeException {
     this.httpStatus = status;
   }
 
+  public ApiServiceException(String message) {
+    this(message, HttpStatus.BAD_REQUEST);
+  }
+
 }
