@@ -5,9 +5,12 @@ import com.lab.springboot.backend.apirest.models.service.ClientService;
 import com.lab.springboot.backend.apirest.utils.ApiResponse;
 import com.lab.springboot.backend.apirest.utils.ApiServiceException;
 import com.lab.springboot.backend.apirest.utils.ResponseEntityHandler;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,9 +51,22 @@ public class ClientRestController {
   }
 
   @PostMapping("")
-  public ResponseEntity<ApiResponse<Client>> save(@RequestBody Client client) {
+  public ResponseEntity<ApiResponse<Client>> save(@Valid @RequestBody Client client, BindingResult result) {
     return ResponseEntityHandler.handleApiResponse(() -> {
       ApiResponse<Client> response = new ApiResponse<>();
+
+      if(result.hasErrors()){
+        for(FieldError errorObject : result.getFieldErrors()){
+          String error = String
+              .format("%s: %s",
+                  errorObject.getField(),
+                  errorObject.getDefaultMessage());
+          response.addError(error);
+        }
+        response.setHttpStatus(HttpStatus.PRECONDITION_REQUIRED);
+        return response;
+      }
+      this.clientService.throwApiServiceExceptionIfEmailExistByAnotherUser(client, client.getEmail());
       response.addResponseData(this.clientService.saveOrUpdate(client));
       response.setHttpStatus(HttpStatus.CREATED);
       return response;
@@ -64,11 +80,7 @@ public class ClientRestController {
       ApiResponse<Client> response = new ApiResponse<>();
 
       Client currentClient = this.clientService.findByIdOrThrowsException(id);
-
-      if(this.clientService.checkIfEmailExistByAnotherUser(currentClient, client.getEmail())) {
-        String error = String.format("The Email '%s' already exists by another user", client.getEmail());
-        throw new ApiServiceException(error, HttpStatus.ALREADY_REPORTED);
-      }
+      this.clientService.throwApiServiceExceptionIfEmailExistByAnotherUser(currentClient, client.getEmail());
       currentClient.setName(client.getName());
       currentClient.setSurname(client.getSurname());
       currentClient.setImage(client.getImage());
