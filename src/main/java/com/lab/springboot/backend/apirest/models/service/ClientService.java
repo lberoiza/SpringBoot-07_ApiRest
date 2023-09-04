@@ -33,4 +33,12 @@ public class ClientService extends BaseCRUDService<Client, ClientRepository>{
     return !Objects.equals(client.getId(), clientWithEmail.getId());
   }
 
+  public void throwApiServiceExceptionIfEmailExistByAnotherUser(Client client, String email){
+    if(this.checkIfEmailExistByAnotherUser(client, email)){
+      String error = String.format("The Email '%s' already exists by another user", email);
+      throw new ApiServiceException(error);
+    }
+  }
+
+
 }
