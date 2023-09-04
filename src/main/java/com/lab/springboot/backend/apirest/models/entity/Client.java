@@ -38,9 +38,8 @@ public class Client implements EntityTable {
   @Column(nullable = false, unique = true)
   private String email;
 
-  @NotNull
   @Past
-  @Column(name = "created_at")
+  @Column(name = "created_at", nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
   @DateTimeFormat(pattern = "yyyy-MM-dd")
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
