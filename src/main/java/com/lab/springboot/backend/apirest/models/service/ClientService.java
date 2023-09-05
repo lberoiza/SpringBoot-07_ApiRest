@@ -54,7 +54,7 @@ public class ClientService extends BaseCRUDService<Client, ClientRepository> {
                 errorObject.getDefaultMessage());
         response.addError(error);
       }
-      response.setHttpStatus(HttpStatus.PRECONDITION_REQUIRED);
+      response.setHttpStatus(HttpStatus.UNPROCESSABLE_ENTITY);
     }
     return response;
   }
