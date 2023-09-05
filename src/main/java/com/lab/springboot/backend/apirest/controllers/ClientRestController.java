@@ -51,19 +51,11 @@ public class ClientRestController {
   }
 
   @PostMapping("")
-  public ResponseEntity<ApiResponse<Client>> save(@Valid @RequestBody Client client, BindingResult result) {
+  public ResponseEntity<ApiResponse<Client>> save(@Valid @RequestBody Client client,
+                                                  BindingResult result) {
     return ResponseEntityHandler.handleApiResponse(() -> {
-      ApiResponse<Client> response = new ApiResponse<>();
-
-      if(result.hasErrors()){
-        for(FieldError errorObject : result.getFieldErrors()){
-          String error = String
-              .format("%s: %s",
-                  errorObject.getField(),
-                  errorObject.getDefaultMessage());
-          response.addError(error);
-        }
-        response.setHttpStatus(HttpStatus.PRECONDITION_REQUIRED);
+      ApiResponse<Client> response = this.clientService.validateClient(result);
+      if (response.hasErrors()) {
         return response;
       }
       this.clientService.throwApiServiceExceptionIfEmailExistByAnotherUser(client, client.getEmail());
@@ -74,10 +66,15 @@ public class ClientRestController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ApiResponse<Client>> update(@RequestBody Client client, @PathVariable Long id) {
+  public ResponseEntity<ApiResponse<Client>> update(@PathVariable Long id,
+                                                    @Valid @RequestBody Client client,
+                                                    BindingResult result) {
 
     return ResponseEntityHandler.handleApiResponse(() -> {
-      ApiResponse<Client> response = new ApiResponse<>();
+      ApiResponse<Client> response = this.clientService.validateClient(result);
+      if (response.hasErrors()) {
+        return response;
+      }
 
       Client currentClient = this.clientService.findByIdOrThrowsException(id);
       this.clientService.throwApiServiceExceptionIfEmailExistByAnotherUser(currentClient, client.getEmail());
