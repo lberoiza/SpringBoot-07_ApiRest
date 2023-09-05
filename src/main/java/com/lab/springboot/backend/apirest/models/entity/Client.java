@@ -2,10 +2,7 @@ package com.lab.springboot.backend.apirest.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,6 +25,7 @@ public class Client implements EntityTable {
   private Long id;
 
   @NotBlank
+  @Size(min = 4, max = 12)
   private String name;
 
   @NotBlank
