@@ -66,6 +66,10 @@ public class ApiResponse<T> {
     return this.messages.get(MESSAGE_ERROR).isEmpty();
   }
 
+  public boolean hasErrors() {
+    return !this.isSuccessfully();
+  }
+
   public void setHttpStatus(HttpStatus httpStatus) {
     this.httpStatus = httpStatus;
     this.httpCode = httpStatus.value();
