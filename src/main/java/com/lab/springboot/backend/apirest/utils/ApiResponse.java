@@ -1,7 +1,9 @@
 package com.lab.springboot.backend.apirest.utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
@@ -9,23 +11,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Getter
 public class ApiResponse<T> {
 
   private static final String MESSAGE_SUCCESS = "success";
   private static final String MESSAGE_WARNING = "warning";
   private static final String MESSAGE_ERROR = "error";
 
-  @Getter
+  @Setter(AccessLevel.NONE)
   private Map<String, List<String>> messages;
 
-  @Getter
   @JsonProperty("response")
   private T responseData;
 
-  @Getter
   private HttpStatus httpStatus;
 
-  @Getter
   private int httpCode;
 
   public ApiResponse() {
