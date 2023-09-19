@@ -2,7 +2,6 @@ package com.lab.springboot.backend.apirest.utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
@@ -12,9 +11,9 @@ import java.util.Map;
 
 public class ApiResponse<T> {
 
-  private static String MESSAGE_SUCCESS = "success";
-  private static String MESSAGE_WARNING = "warning";
-  private static String MESSAGE_ERROR = "error";
+  private static final String MESSAGE_SUCCESS = "success";
+  private static final String MESSAGE_WARNING = "warning";
+  private static final String MESSAGE_ERROR = "error";
 
   @Getter
   private Map<String, List<String>> messages;

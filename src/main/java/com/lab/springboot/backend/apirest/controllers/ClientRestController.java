@@ -3,14 +3,17 @@ package com.lab.springboot.backend.apirest.controllers;
 import com.lab.springboot.backend.apirest.models.entity.Client;
 import com.lab.springboot.backend.apirest.models.service.ClientService;
 import com.lab.springboot.backend.apirest.utils.ApiResponse;
-import com.lab.springboot.backend.apirest.utils.ApiServiceException;
 import com.lab.springboot.backend.apirest.utils.ResponseEntityHandler;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +22,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/clients")
 public class ClientRestController {
+
+  private static final Logger log = LoggerFactory.getLogger(ClientRestController.class);
 
   private final ClientService clientService;
 
@@ -32,6 +37,24 @@ public class ClientRestController {
     return ResponseEntityHandler.handleApiResponse(() -> {
       ApiResponse<List<Client>> response = new ApiResponse<>();
       List<Client> clients = this.clientService.findAll();
+      response.addResponseData(clients);
+      if (clients.isEmpty()) {
+        response.addWarning("There are no clients");
+        response.setHttpStatus(HttpStatus.NOT_FOUND);
+      }
+      return response;
+    });
+  }
+
+  @GetMapping("/page/{page}")
+  public ResponseEntity<ApiResponse<Page<Client>>> getPageOfClients(
+      @PathVariable Integer page,
+      @RequestParam(defaultValue = "5") Integer pageSize) {
+    return ResponseEntityHandler.handleApiResponse(() -> {
+      ApiResponse<Page<Client>> response = new ApiResponse<>();
+      log.info("PageSize: "+pageSize);
+      Pageable pageable = PageRequest.of(page, pageSize);
+      Page<Client> clients = this.clientService.findAll(pageable);
       response.addResponseData(clients);
       if (clients.isEmpty()) {
         response.addWarning("There are no clients");
