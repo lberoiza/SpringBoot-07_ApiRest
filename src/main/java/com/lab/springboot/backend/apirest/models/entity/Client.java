@@ -21,7 +21,8 @@ public class Client implements EntityTable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_client_id")
-  @SequenceGenerator(name = "seq_client_id", initialValue = 50, allocationSize = 1)
+  @SequenceGenerator(name = "seq_client_id", initialValue = 300, allocationSize = 1)
+//  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @NotBlank
