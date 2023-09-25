@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serial;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -51,6 +52,15 @@ public class Client implements EntityTable {
   private LocalDateTime updatedAt;
 
   private String image;
+
+  @NotNull
+  @Past
+  @Column(name = "date_of_birth")
+  @Temporal(TemporalType.DATE)
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  @JsonFormat(pattern = "yyyy-MM-dd")
+  private LocalDate dateOfBirth;
+
 
 //  @OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 //  @JsonManagedReference
